@@ -1,9 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
@@ -11,13 +5,22 @@ import {
   Text,
   View
 } from 'react-native';
+import firebase from 'firebase';
 
+  // Initialize Firebase
+ firebase.initializeApp({
+    apiKey: "AIzaSyAtgWdjEgbGSYTt5SCz2DNEMx6CLHg1pCo",
+    authDomain: "lets-talk-e16c6.firebaseapp.com",
+    databaseURL: "https://lets-talk-e16c6.firebaseio.com",
+    storageBucket: "lets-talk-e16c6.appspot.com",
+    messagingSenderId: "67803456662"
+  });
 export default class letstalk extends Component {
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Welcome to React Native! test
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.android.js
