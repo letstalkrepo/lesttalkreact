@@ -14,13 +14,19 @@ class Posts extends Component {
     {
         super()
         this.state = {
-        postMessage: ''
-    };
+            postMessage: ''
+        };
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.messages = [];
         this.dataSource = ds.cloneWithRows(this.messages);
         this.handleInputOnChange = this.handleInputOnChange.bind(this);
-        this.getAllPosts();
+        this.getAllPosts((message) => {
+                this.messages.push(message);
+                this.dataSource = ds.cloneWithRows(this.messages);
+                this.handleInputOnChange = this.handleInputOnChange.bind(this);
+                
+                this.forceUpdate();
+        });
     }
 
     saveBBDD (typeName)
@@ -28,10 +34,11 @@ class Posts extends Component {
         const itemToSave = {userId: 1, postText: this.state.postMessage};
         const dbRef = firebase.database().ref(typeName);
         const newItemToSave = dbRef.push();
-        newItemToSave.set(itemToSave);
+        newItemToSave.set(itemToSave);/*
         this.messages.push(this.state.postMessage);
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.dataSource = ds.cloneWithRows(this.messages);
+        this.forceUpdate();*/
     }
 
     createPostNode(text)
@@ -41,17 +48,11 @@ class Posts extends Component {
         return pNode;
     }
 
-    getAllPosts()
+
+    getAllPosts(callback)
     {
         firebase.database().ref('post').on('child_added', function(data) {
-            /*
-            var containerElement = document.getElementsByClassName('posts-container')[0];
-            var pNode = document.createElement('p');
-            pNode.innerHTML = data.val().postText;
-            containerElement.insertBefore(pNode, containerElement.firstChild);
-            */
-            //messages.push(data.val().postText);
-            //this.dataSource = ds.cloneWithRows(this.messages);
+            callback(data.val().postText);
         });
     }
 
