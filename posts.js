@@ -7,7 +7,8 @@ import {
   View,
   Button,
   TextInput,
-  ListView
+  ListView,
+  ScrollView
 } from 'react-native';
 class Posts extends Component {
     constructor () 
@@ -58,13 +59,14 @@ class Posts extends Component {
     {
         return (
         <View>
-        <TextInput id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
-        {this.renderPostButton()}
-        <ListView
-        dataSource={this.dataSource}
-        renderRow={(rowData) => <Text>{rowData}</Text>}
-        />
-
+            <View>
+                <TextInput id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
+                {this.renderPostButton()}
+            </View>
+            <ListView 
+            dataSource={this.dataSource}
+            renderRow={(rowData) => <Text>{rowData}</Text>}
+            />
         </View>
         )
     }
