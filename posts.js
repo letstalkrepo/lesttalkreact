@@ -35,20 +35,8 @@ class Posts extends Component {
         const itemToSave = {userId: 1, postText: this.state.postMessage};
         const dbRef = firebase.database().ref(typeName);
         const newItemToSave = dbRef.push();
-        newItemToSave.set(itemToSave);/*
-        this.messages.push(this.state.postMessage);
-        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.dataSource = ds.cloneWithRows(this.messages);
-        this.forceUpdate();*/
+        newItemToSave.set(itemToSave);
     }
-
-    createPostNode(text)
-    {
-        var pNode = document.createElement('p');
-        pNode.innerHTML = text;
-        return pNode;
-    }
-
 
     getAllPosts(callback)
     {
