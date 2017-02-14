@@ -24,7 +24,7 @@ constructor () {
 		}
   render() {
     return (
-      <View>
+      <View style={{flex:1}}>
 			<Login/>
       </View>
     );
@@ -37,6 +37,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    borderWidth: 1,
+    flexDirection: 'column',
   },
   welcome: {
     fontSize: 20,

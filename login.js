@@ -10,6 +10,8 @@ import {
 import firebase from 'firebase';
 import Posts from './posts.js';
 
+
+
 class Login extends Component {
     constructor () {
 		super();
@@ -24,7 +26,6 @@ class Login extends Component {
         this.register = this.register.bind(this);
         this.renderError = this.renderError.bind(this);
 		this.renderLoginButton = this.renderLoginButton.bind(this);
-        
         _this = this;
         firebase.auth().onAuthStateChanged(function(user) {
                 _this.state.user = user;
@@ -88,7 +89,7 @@ class Login extends Component {
 			if(this.state.user === null){
 				//No esta logueado
 				return (<View>
-                    <TextInput  id="mailInput" 
+                    <TextInput style={styles.inputText} id="mailInput" 
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
                 <TextInput  id="passwordInput" 
@@ -96,9 +97,11 @@ class Login extends Component {
                 placeholder="Password"/>
                 
                 {this.renderError()}
-                <Button onPress={this.logIn} title="Login" />
-                <Text/>
-                <View><Button onPress={this.register} title="Register" /></View></View>)
+                    <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                        <Button style={styles.buttonInput} onPress={this.logIn} title="Login" />
+                        <Button style={styles.buttonInput} onPress={this.register} title="Register" />
+                    </View>
+                </View>)
 			}
 			else{
 				return (<View>
@@ -108,10 +111,27 @@ class Login extends Component {
 		}
   render() {
     return (
-      <View>
+      <View style={styles.container}>
 		    {this.renderLoginButton()}
       </View>
     );
   }
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'center',
+    backgroundColor: '#00BFFF',
+    flexDirection: 'column',
+    flex:1
+  },
+  inputText:{
+  },
+  buttonInput:{
+      margin:5,
+      flex:1 
+  }
+});
+
 export default Login;
