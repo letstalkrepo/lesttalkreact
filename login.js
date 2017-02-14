@@ -104,7 +104,7 @@ class Login extends Component {
                 </View>)
 			}
 			else{
-				return (<View>
+				return (<View style={{flex:1}}>
                     <Button onPress={this.logOut} title="Logout" />
                     <Posts /></View>)
 			}
