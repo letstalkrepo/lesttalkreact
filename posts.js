@@ -58,14 +58,15 @@ class Posts extends Component {
     render () 
     {
         return (
-        <ScrollView>
+        <ScrollView style={{backgroundColor: '#efefef', height: 800}} >
         <TextInput id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
         {this.renderPostButton()}
         <ListView 
         dataSource={this.dataSource}
         
-        renderRow={(rowData) => <View style={styles.text}><Text>{rowData}</Text></View>}
-        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+        renderRow={(rowData) => <View style={styles.text} elevation={5}><Text>{rowData}</Text></View>}
+
+        //renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
         />
 
         </ScrollView>
@@ -75,9 +76,9 @@ class Posts extends Component {
 
 const styles = StyleSheet.create({
   text: {
-    marginLeft: 12,
-    fontSize: 16,
-    padding: 5,
+    padding: 7,
+    margin: 3,
+    backgroundColor: '#FFFFFF',
   },
   photo: {
     height: 40,
