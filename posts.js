@@ -66,7 +66,7 @@ class Posts extends Component {
 
     saveBBDD (typeName)
     {
-        const itemToSave = {userId: 1, postText: this.state.postMessage};
+        const itemToSave = {userId: firebase.auth().currentUser.uid, userMail: firebase.auth().currentUser.email, postText: this.state.postMessage};
         const dbRef = firebase.database().ref(typeName);
         const newItemToSave = dbRef.push();
         newItemToSave.set(itemToSave);
@@ -75,7 +75,7 @@ class Posts extends Component {
     getAllPosts(callback)
     {
         firebase.database().ref('post').on('child_added', function(data) {
-            callback(data.val().postText);
+            callback('- ' + data.val().userMail + ':\n    '+ data.val().postText);
         });
     }
 
@@ -92,17 +92,38 @@ class Posts extends Component {
     render () 
     {
         return (
-        <View>
-            <View>
-                <TextInput id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
-                {this.renderPostButton()}
-            </View>
-            <ListView 
-            dataSource={this.dataSource}
-            renderRow={(rowData) => <Text>{rowData}</Text>}
-            />
-        </View>
+        <ScrollView style={{backgroundColor: '#efefef', height: 800}} >
+        <TextInput id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
+        {this.renderPostButton()}
+        <ListView 
+        dataSource={this.dataSource}
+        
+        renderRow={(rowData) => <View style={styles.text} elevation={5}><Text>{rowData}</Text></View>}
+
+        //renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+        />
+
+        </ScrollView>
         )
     }
 }
+
+const styles = StyleSheet.create({
+  text: {
+    padding: 7,
+    margin: 3,
+    backgroundColor: '#FFFFFF',
+  },
+  photo: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+  },
+  separator: {
+    flex: 1,
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#8E8E8E',
+  },
+});
+
 export default Posts;
