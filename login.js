@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 import Posts from './posts.js';
+import Topics from './topics.js';
 
 class Login extends Component {
     constructor () {
@@ -102,8 +103,15 @@ class Login extends Component {
 			}
 			else{
 				return (<View>
-                    <Button onPress={this.logOut} title="Logout" />
-                    <Posts /></View>)
+                    <View style={{flex: 1, flexDirection: 'row'}} >
+                        <View style={{width: 150, height: 50}}>
+                            <Text>{firebase.auth().currentUser.email}</Text>
+                        </View>
+                        <View style={{width: 200, height: 50}}>
+                            <Button onPress={this.logOut} title="Logout" />
+                        </View>
+                    </View>
+                    <Topics/></View>)
 			}
 		}
   render() {
@@ -114,4 +122,12 @@ class Login extends Component {
     );
   }
 }
+
+const styles= StyleSheet.create({
+    userUtilsView:{
+        height: 50
+    }
+    
+});
+
 export default Login;
