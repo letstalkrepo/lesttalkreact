@@ -10,6 +10,9 @@ import {
   ListView,
   ScrollView
 } from 'react-native';
+ //import {NotificationsAndroid} from 'react-native-notifications';
+ 
+
 class Posts extends Component {
     constructor () 
     {
@@ -52,24 +55,30 @@ class Posts extends Component {
     }
 
     renderPostButton(){
-        return (<Button onPress={() => this.saveBBDD('post')} title="Post message"/>)
+        return (<Button onPress={() => this.saveBBDD('post')} 
+        title="Post message"/>)
     }
 
     render () 
     {
         return (
-        <ScrollView style={{backgroundColor: '#efefef', height: 800}} >
-        <TextInput id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
-        {this.renderPostButton()}
-        <ListView 
-        dataSource={this.dataSource}
-        
-        renderRow={(rowData) => <View style={styles.text} elevation={5}><Text>{rowData}</Text></View>}
+        <View style={{flex:1}}>   
+            <TextInput 
+            id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
+            {this.renderPostButton()}
+            
+            <ScrollView style={{backgroundColor: '#efefef', height: 800, flex:1}} >
+            <ListView 
+            dataSource={this.dataSource}
+            
+            renderRow={(rowData) => <View style={styles.text} 
+            elevation={5}><Text>{rowData}</Text></View>}
 
-        //renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
-        />
+            //renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+            />
 
-        </ScrollView>
+            </ScrollView>
+        </View>
         )
     }
 }
