@@ -10,6 +10,8 @@ import {
 import firebase from 'firebase';
 import Posts from './posts.js';
 import Topics from './topics.js';
+import FireAuth from 'react-native-firebase-auth';
+import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 
 class Login extends Component {
     constructor () {
@@ -32,7 +34,24 @@ class Login extends Component {
                 _this.renderLoginButton();
                 _this.forceUpdate();
             })
-        
+            
+         GoogleSignin.hasPlayServices({autoResolve: true}).then(() => {
+            GoogleSignin.configure({
+                scopes: [
+                    'email', 'profile', 'https://www.googleapis.com/auth/plus.profile.emails.read', 'https://www.googleapis.com/auth/plus.login'
+                ],
+                webClientId: "67803456662-37a33lqirl0qe12vn7tr78jpqv01418c.apps.googleusercontent.com",
+                offlineAccess: true
+            })
+            .then(() => {
+                GoogleSignin.currentUserAsync().then((user) => {
+                    console.log('USER', user);
+                    _this.state.user = user;
+                    _this.renderLoginButton();
+                    _this.forceUpdate();
+                }).done()
+            });
+         });
 		}
 		logIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -72,11 +91,21 @@ class Login extends Component {
 
 		logOut(){
 			firebase.auth().signOut()
-				.then(function() {
-					console.log('Signed Out');
-				}, function(error) {
-					console.error('Sign Out Error', error);
-				});
+            .then(function() {
+                console.log('Signed Out');
+            }, function(error) {
+                console.error('Sign Out Error', error);
+            });
+            GoogleSignin.signOut()
+            .then(() => {
+            console.log('out');
+            })
+            .catch((err) => {
+
+            });
+             _this.state.user = null;
+            _this.renderLoginButton();
+            _this.forceUpdate();
 		}
 		
         renderError(){
@@ -85,6 +114,18 @@ class Login extends Component {
             }
             else return(<Text />);
         }
+        _signIn(){
+            GoogleSignin.signIn()
+                .then((user) => {
+                    _this.state.user = user;
+                    _this.renderLoginButton();
+                    _this.forceUpdate();
+                })
+                .catch((err) => {
+                })
+            .done();
+        }
+        
 		renderLoginButton(){
 			if(this.state.user === null){
 				//No esta logueado
@@ -93,10 +134,17 @@ class Login extends Component {
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
                 <TextInput  id="passwordInput" 
+                //onSubmitEditing={this.logIn}
                 onChangeText={(password) => this.setState({password})} 
                 placeholder="Password"/>
                 
                 {this.renderError()}
+                
+                <GoogleSigninButton
+                style={{width: 312, height: 48}}
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Light}
+                onPress={this._signIn.bind(this)}/>
                 <Button onPress={this.logIn} title="Login" />
                 <Text/>
                 <View><Button onPress={this.register} title="Register" /></View></View>)
@@ -105,7 +153,7 @@ class Login extends Component {
 				return (<View>
                     <View style={{flex: 1, flexDirection: 'row'}} >
                         <View style={{width: 150, height: 50}}>
-                            <Text>{firebase.auth().currentUser.email}</Text>
+                            <Text>{this.state.user.email}</Text>
                         </View>
                         <View style={{width: 200, height: 50}}>
                             <Button onPress={this.logOut} title="Logout" />

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "67803456662-8sc02t0keljab4ona0rhruk19s3g0q52.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.letstalk",
+            "certificate_hash": "5D4919992028A90F347791E3983D5ECE2E891116"
+          }
+        },
+        {
           "client_id": "67803456662-37a33lqirl0qe12vn7tr78jpqv01418c.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67803456662-37a33lqirl0qe12vn7tr78jpqv01418c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

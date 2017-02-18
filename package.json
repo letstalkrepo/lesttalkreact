@@ -1,23 +1,26 @@
 {
-	"name": "letstalk",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
-	},
-	"dependencies": {
-		"firebase": "^3.6.9",
-		"react": "15.4.2",
-		"react-native": "0.41.2"
-	},
-	"devDependencies": {
-		"babel-jest": "18.0.0",
-		"babel-preset-react-native": "1.9.1",
-		"jest": "18.1.0",
-		"react-test-renderer": "15.4.2"
-	},
-	"jest": {
-		"preset": "react-native"
-	}
+  "name": "letstalk",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "firebase": "^3.6.9",
+    "react": "15.4.2",
+    "react-native": "0.41.2",
+    "react-native-facebook-login": "^1.4.0",
+    "react-native-firebase-auth": "0.0.11",
+    "react-native-google-signin": "^0.8.1"
+  },
+  "devDependencies": {
+    "babel-jest": "18.0.0",
+    "babel-preset-react-native": "1.9.1",
+    "jest": "18.1.0",
+    "react-test-renderer": "15.4.2"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
 }
