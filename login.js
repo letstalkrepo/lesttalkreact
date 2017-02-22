@@ -5,14 +5,15 @@ import {
   Text,
   View,
   Button,
-  TextInput
+  TextInput,
+  Image
 } from 'react-native';
 import firebase from 'firebase';
 import Posts from './posts.js';
 import Topics from './topics.js';
 import FireAuth from 'react-native-firebase-auth';
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
-
+var PushNotification = require('react-native-push-notification');
 class Login extends Component {
     constructor () {
 		super();
@@ -34,7 +35,18 @@ class Login extends Component {
                 _this.renderLoginButton();
                 _this.forceUpdate();
             })
-            
+        PushNotification.configure({
+            onRegister: function(token) {
+                alert( 'TOKEN:' + token );
+            },
+
+            // (required) Called when a remote or local notification is opened or received
+            onNotification: function(notification) {
+                alert( 'NOTIFICATION:' + notification.message);
+            },
+            popInitialNotification: true,
+            requestPermissions: true,
+        });
          GoogleSignin.hasPlayServices({autoResolve: true}).then(() => {
             GoogleSignin.configure({
                 scopes: [
@@ -125,6 +137,13 @@ class Login extends Component {
                 })
             .done();
         }
+        /*
+        <GoogleSigninButton
+                style={{width: 312, height: 48}}
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Light}
+                onPress={this._signIn.bind(this)}/>
+                */
         
 		renderLoginButton(){
 			if(this.state.user === null){
@@ -140,11 +159,7 @@ class Login extends Component {
                 
                 {this.renderError()}
                 
-                <GoogleSigninButton
-                style={{width: 312, height: 48}}
-                size={GoogleSigninButton.Size.Wide}
-                color={GoogleSigninButton.Color.Light}
-                onPress={this._signIn.bind(this)}/>
+                
                 <Button onPress={this.logIn} title="Login" />
                 <Text/>
                 <View><Button onPress={this.register} title="Register" /></View></View>)
@@ -164,7 +179,12 @@ class Login extends Component {
 		}
   render() {
     return (
-      <View>
+      <View style={styles.landing}>
+          <View style={styles.imageLogo}>
+          <Image 
+           source={{uri: 'http://fpscny.org/wordpress2/wp-content/uploads/Lets-Talk-Final-Logo.png'}}
+       style={{width: 50, height: 50}} />
+       </View>
 		    {this.renderLoginButton()}
       </View>
     );
@@ -174,6 +194,15 @@ class Login extends Component {
 const styles= StyleSheet.create({
     userUtilsView:{
         height: 50
+    },
+    landing:{
+        backgroundColor: 'aqua',
+        flex: 1,
+        padding: 10
+    },
+    imageLogo:{
+        flexDirection: 'column',
+        alignItems:'center'
     }
     
 });

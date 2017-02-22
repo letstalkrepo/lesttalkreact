@@ -45,6 +45,10 @@ class Posts extends Component {
     {
         firebase.database().ref('post').on('child_added', function(data) {
             callback('- ' + data.val().userMail + ':\n    '+ data.val().postText);
+            
+            PushNotification.localNotification({
+                message: data.val().userMail + " - " + data.val().postText
+            });
         });
     }
 
