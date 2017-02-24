@@ -5,10 +5,10 @@ import {
   Text,
   View,
   Button,
-  TextInput
+  TextInput,
+  Navigator
 } from 'react-native';
 import firebase from 'firebase';
-import Posts from './posts.js';
 import Topics from './topics.js';
 
 class Login extends Component {
@@ -111,16 +111,32 @@ class Login extends Component {
                             <Button onPress={this.logOut} title="Logout" />
                         </View>
                     </View>
-                    <Topics/></View>)
+                    <Topics navigator={this.props.navigator} title="topics"/>
+                    </View>)
 			}
 		}
+
+        /*componentWillMount()
+        {
+            if(this.state.user !== null)
+            {
+                this.goToTopics();
+            }
+        }*/
+
+    goToTopics()
+    {
+        this.props.navigator.push({
+        id: 'topics',
+        });
+    }
+
   render() {
     return (
-      <View>
-		    {this.renderLoginButton()}
-      </View>
+      this.renderLoginButton()
     );
   }
+
 }
 
 const styles= StyleSheet.create({

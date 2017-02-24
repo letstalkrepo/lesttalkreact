@@ -8,15 +8,18 @@ import {
   Button,
   TextInput,
   ListView,
-  ScrollView
+  ScrollView,
+  TouchableHighlight,
+  Navigator,
+  TouchableOpacity
 } from 'react-native';
  //import {NotificationsAndroid} from 'react-native-notifications';
  
 
 class Posts extends Component {
-    constructor () 
+    constructor (props) 
     {
-        super()
+        super(props)
         this.state = {
             postMessage: ''
         };
@@ -24,8 +27,15 @@ class Posts extends Component {
         this.messages = [];
         this.dataSource = ds.cloneWithRows(this.messages);
         this.handleInputOnChange = this.handleInputOnChange.bind(this);
-        this.getAllPosts((message) => {
-                this.messages.push(message);
+
+        this.getAllPosts(this.props.topicId, (postUserMail, postMessage, postId) => {
+
+                var postItem = {};
+                postItem["postUserMail"] = postUserMail;
+                postItem["postMessage"] = postMessage;
+                postItem["postId"] = postId;
+
+                this.messages.push(postItem);
                 this.dataSource = ds.cloneWithRows(this.messages);
                 this.handleInputOnChange = this.handleInputOnChange.bind(this);
                 
@@ -33,18 +43,23 @@ class Posts extends Component {
         });
     }
 
+    pocessGetAllPosts()
+    {
+        
+    }
+
     saveBBDD (typeName)
     {
-        const itemToSave = {userId: firebase.auth().currentUser.uid, userMail: firebase.auth().currentUser.email, postText: this.state.postMessage};
+        const itemToSave = {userId: firebase.auth().currentUser.uid, userMail: firebase.auth().currentUser.email, postText: this.state.postMessage, topicId: this.props.topicId};
         const dbRef = firebase.database().ref(typeName);
         const newItemToSave = dbRef.push();
         newItemToSave.set(itemToSave);
     }
 
-    getAllPosts(callback)
+    getAllPosts(topicId, callback)
     {
-        firebase.database().ref('post').on('child_added', function(data) {
-            callback('- ' + data.val().userMail + ':\n    '+ data.val().postText);
+        firebase.database().ref('post').orderByChild("topicId").equalTo(topicId).on('child_added', function(data) {
+            callback(data.val().userMail, data.val().postText, data.key);
         });
     }
 
@@ -59,23 +74,39 @@ class Posts extends Component {
         title="Post message"/>)
     }
 
+     goToTopics() {
+    this.props.navigator.pop();
+  }
+
+  removePost(_postId)
+  {
+        firebase.database().ref('post').child(_postId).remove();
+        this.goToTopics();
+  }
+
     render () 
     {
         return (
-        <View style={{flex:1}}>   
+        <View style={{flex:1}}>
+
+            <Button onPress={this.goToTopics.bind(this)}  title="Back to Topics" color="#841584"/>
+
             <TextInput 
             id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
             {this.renderPostButton()}
             
             <ScrollView style={{backgroundColor: '#efefef', height: 800, flex:1}} >
-            <ListView 
-            dataSource={this.dataSource}
+            <ListView dataSource={this.dataSource}
             
-            renderRow={(rowData) => <View style={styles.text} 
-            elevation={5}><Text>{rowData}</Text></View>}
-
+            renderRow={(rowData) => 
+                <TouchableHighlight onPress={this.removePost.bind(this, rowData["postId"])}>
+                    <View style={styles.text} elevation={5}>
+                        <Text style={{fontWeight: "bold"}}>{rowData["postUserMail"]}</Text>
+                        <Text>{rowData["postMessage"]}</Text>
+                        </View>
+                </TouchableHighlight>
             //renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
-            />
+            }/>
 
             </ScrollView>
         </View>
