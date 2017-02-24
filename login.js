@@ -7,10 +7,13 @@ import {
   Button,
   TextInput,
   Navigator
+  Image
 } from 'react-native';
 import firebase from 'firebase';
 import Topics from './topics.js';
-
+import FireAuth from 'react-native-firebase-auth';
+import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+var PushNotification = require('react-native-push-notification');
 class Login extends Component {
     constructor () {
 		super();
@@ -32,7 +35,35 @@ class Login extends Component {
                 _this.renderLoginButton();
                 _this.forceUpdate();
             })
-        
+        PushNotification.configure({
+            onRegister: function(token) {
+                alert( 'TOKEN:' + token );
+            },
+
+            // (required) Called when a remote or local notification is opened or received
+            onNotification: function(notification) {
+                alert( 'NOTIFICATION:' + notification.message);
+            },
+            popInitialNotification: true,
+            requestPermissions: true,
+        });
+         GoogleSignin.hasPlayServices({autoResolve: true}).then(() => {
+            GoogleSignin.configure({
+                scopes: [
+                    'email', 'profile', 'https://www.googleapis.com/auth/plus.profile.emails.read', 'https://www.googleapis.com/auth/plus.login'
+                ],
+                webClientId: "67803456662-37a33lqirl0qe12vn7tr78jpqv01418c.apps.googleusercontent.com",
+                offlineAccess: true
+            })
+            .then(() => {
+                GoogleSignin.currentUserAsync().then((user) => {
+                    console.log('USER', user);
+                    _this.state.user = user;
+                    _this.renderLoginButton();
+                    _this.forceUpdate();
+                }).done()
+            });
+         });
 		}
 		logIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -72,11 +103,21 @@ class Login extends Component {
 
 		logOut(){
 			firebase.auth().signOut()
-				.then(function() {
-					console.log('Signed Out');
-				}, function(error) {
-					console.error('Sign Out Error', error);
-				});
+            .then(function() {
+                console.log('Signed Out');
+            }, function(error) {
+                console.error('Sign Out Error', error);
+            });
+            GoogleSignin.signOut()
+            .then(() => {
+            console.log('out');
+            })
+            .catch((err) => {
+
+            });
+             _this.state.user = null;
+            _this.renderLoginButton();
+            _this.forceUpdate();
 		}
 		
         renderError(){
@@ -85,6 +126,25 @@ class Login extends Component {
             }
             else return(<Text />);
         }
+        _signIn(){
+            GoogleSignin.signIn()
+                .then((user) => {
+                    _this.state.user = user;
+                    _this.renderLoginButton();
+                    _this.forceUpdate();
+                })
+                .catch((err) => {
+                })
+            .done();
+        }
+        /*
+        <GoogleSigninButton
+                style={{width: 312, height: 48}}
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Light}
+                onPress={this._signIn.bind(this)}/>
+                */
+        
 		renderLoginButton(){
 			if(this.state.user === null){
 				//No esta logueado
@@ -93,10 +153,13 @@ class Login extends Component {
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
                 <TextInput  id="passwordInput" 
+                //onSubmitEditing={this.logIn}
                 onChangeText={(password) => this.setState({password})} 
                 placeholder="Password"/>
                 
                 {this.renderError()}
+                
+                
                 <Button onPress={this.logIn} title="Login" />
                 <Text/>
                 <View><Button onPress={this.register} title="Register" /></View></View>)
@@ -105,7 +168,7 @@ class Login extends Component {
 				return (<View>
                     <View style={{flex: 1, flexDirection: 'row'}} >
                         <View style={{width: 150, height: 50}}>
-                            <Text>{firebase.auth().currentUser.email}</Text>
+                            <Text>{this.state.user.email}</Text>
                         </View>
                         <View style={{width: 200, height: 50}}>
                             <Button onPress={this.logOut} title="Logout" />
@@ -133,7 +196,14 @@ class Login extends Component {
 
   render() {
     return (
-      this.renderLoginButton()
+      <View style={styles.landing}>
+          <View style={styles.imageLogo}>
+          <Image 
+           source={{uri: 'http://fpscny.org/wordpress2/wp-content/uploads/Lets-Talk-Final-Logo.png'}}
+       style={{width: 50, height: 50}} />
+       </View>
+		    {this.renderLoginButton()}
+      </View>
     );
   }
 
@@ -142,6 +212,15 @@ class Login extends Component {
 const styles= StyleSheet.create({
     userUtilsView:{
         height: 50
+    },
+    landing:{
+        backgroundColor: 'aqua',
+        flex: 1,
+        padding: 10
+    },
+    imageLogo:{
+        flexDirection: 'column',
+        alignItems:'center'
     }
     
 });

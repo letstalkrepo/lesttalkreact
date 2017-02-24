@@ -60,6 +60,10 @@ class Posts extends Component {
     {
         firebase.database().ref('post').orderByChild("topicId").equalTo(topicId).on('child_added', function(data) {
             callback(data.val().userMail, data.val().postText, data.key);
+            
+            PushNotification.localNotification({
+                message: data.val().userMail + " - " + data.val().postText
+            });
         });
     }
 
