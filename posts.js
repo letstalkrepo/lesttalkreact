@@ -11,7 +11,8 @@ import {
   ScrollView,
   TouchableHighlight,
   Navigator,
-  TouchableOpacity
+  TouchableOpacity,
+  BackAndroid
 } from 'react-native';
  var PushNotification = require('react-native-push-notification');
 
@@ -20,13 +21,14 @@ class Posts extends Component {
     {
         super(props)
         this.state = {
-            postMessage: ''
+            postMessage: '',
         };
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.messages = [];
         this.dataSource = ds.cloneWithRows(this.messages);
         this.handleInputOnChange = this.handleInputOnChange.bind(this);
-
+        _this = this;
+        this.postRef = firebase.database().ref('post').orderByChild("topicId").equalTo(this.props.topicId);
         this.getAllPosts(this.props.topicId, (postUserMail, postMessage, postId) => {
                 var postItem = {};
                 postItem["postUserMail"] = postUserMail;
@@ -38,6 +40,10 @@ class Posts extends Component {
                 this.handleInputOnChange = this.handleInputOnChange.bind(this);
                 
                 this.forceUpdate();
+        });
+        BackAndroid.addEventListener('hardwareBackPress', function() {
+            _this.goToTopics();
+            return true;
         });
     }
 
@@ -56,14 +62,17 @@ class Posts extends Component {
 
     getAllPosts(topicId, callback)
     {
-        firebase.database().ref('post').orderByChild("topicId").equalTo(topicId).on('child_added', function(data) {
+        this.postRef.on('child_added', function(data) {
             callback(data.val().userMail, data.val().postText, data.key);
-            if(firebase.auth().currentUser.email != data.val().userMai){
+        });
+        this.postRef.limitToLast(1).on('child_added', function(data) {
+            if(firebase.auth().currentUser.email != data.val().userMail){
                 PushNotification.localNotification({
                     message: data.val().userMail + " - " + data.val().postText
                 });
             }
         });
+       
     }
 
     handleInputOnChange (event){
@@ -77,7 +86,7 @@ class Posts extends Component {
         title="Post message"/>)
     }
 
-     goToTopics() {
+  goToTopics() {
     this.props.navigator.pop();
   }
 

@@ -17,7 +17,7 @@ class Topics extends Component {
     constructor () 
     {
         super()
-        this.state = {newTopic: ''};
+        this.state = {newTopic: '', inputValue: ''};
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.topics = [];
         this.topics2 = [];
@@ -37,13 +37,6 @@ class Topics extends Component {
         });
     }
 
-    saveBBDD (typeName)
-    {
-        const itemToSave = {userCreatorId: firebase.auth().currentUser.uid, userCreatorMail: firebase.auth().currentUser.email, title: this.state.newTopic};
-        const dbRef = firebase.database().ref(typeName);
-        const newItemToSave = dbRef.push();
-        newItemToSave.set(itemToSave);
-    }
 
     getAllTopics(callback)
     {
@@ -81,12 +74,7 @@ class Topics extends Component {
  renderScene()
   {
     return (
-        <View style={styles.overallBlock}>
-            <View  elevation={5} style={styles.newTopicBlock}>
-                <Text style={styles.newTopicText}>New topic</Text>
-                <TextInput id="inputNewTopic" onChangeText={(newTopic) => this.setState({newTopic})}/>
-                <Button onPress={() => this.saveBBDD('topics')} title="Create topic"/>
-            </View>
+        <View>
             <ScrollView>
                 <ListView dataSource={this.dataSource} 
                 renderRow={(rowData) =>
@@ -104,13 +92,10 @@ class Topics extends Component {
 }
 
 const styles = StyleSheet.create({
-    overallBlock:{
-        marginTop: 40
-    },
     newTopicBlock: {
-    padding: 7,
-    margin: 3,
-    backgroundColor: '#FFFFFF'
+        padding: 7,
+        margin: 3,
+        backgroundColor: '#FFFFFF'
     },
     newTopicText: {
         marginTop: 5,

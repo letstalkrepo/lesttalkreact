@@ -4,6 +4,7 @@ import Splash from './splash.js';
 import Login from './login.js';
 import Topics from './topics.js';
 import Posts from './posts.js';
+import CreateTopic from './createTopic.js';
 import {
   AppRegistry,
   StyleSheet,
@@ -37,6 +38,8 @@ render() {
         return (<Topics navigator={navigator} title="topics" />);
       case 'posts':
         return (<Posts navigator={navigator} title="posts" {... route.props} />);
+      case 'createTopic':
+        return (<CreateTopic navigator={navigator} title="createTopic" />);
     }
   }
 }

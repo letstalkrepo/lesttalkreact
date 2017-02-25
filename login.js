@@ -7,12 +7,16 @@ import {
   Button,
   TextInput,
   Navigator,
-  Image
+  Image,
+  DrawerLayoutAndroid,
+  TouchableHighlight
 } from 'react-native';
 import firebase from 'firebase';
 import Topics from './topics.js';
-import FireAuth from 'react-native-firebase-auth';
+var ToolbarAndroid = require('ToolbarAndroid');
+//import FireAuth from 'react-native-firebase-auth';
 //import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
+var nativeImageSource = require('nativeImageSource');
 var PushNotification = require('react-native-push-notification');
 class Login extends Component {
     constructor () {
@@ -29,6 +33,7 @@ class Login extends Component {
         this.renderError = this.renderError.bind(this);
 		this.renderLoginButton = this.renderLoginButton.bind(this);
         
+        this.openDrawer = this.openDrawer.bind(this);
         _this = this;
         firebase.auth().onAuthStateChanged(function(user) {
                 _this.state.user = user;
@@ -106,14 +111,14 @@ class Login extends Component {
                 console.log('Signed Out');
             }, function(error) {
                 console.error('Sign Out Error', error);
-            });
+            });/*
             GoogleSignin.signOut()
             .then(() => {
             console.log('out');
             })
             .catch((err) => {
 
-            });
+            });*/
              _this.state.user = null;
             _this.renderLoginButton();
             _this.forceUpdate();
@@ -149,6 +154,12 @@ class Login extends Component {
 			if(this.state.user === null){
 				//No esta logueado
 				return (<View>
+                    
+          <View style={styles.imageLogo}>
+                <Image 
+                source={{uri: 'http://oi63.tinypic.com/2sai1aq.jpg'}}
+            style={{width: 71, height: 57}} />
+            </View>
                     <TextInput  id="mailInput" 
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
@@ -166,48 +177,79 @@ class Login extends Component {
 			}
 			else{
 				return (<View>
-                    <View style={{flex: 1, flexDirection: 'row'}} >
-                        <View style={{width: 150, height: 50}}>
-                            <Text>{this.state.user.email}</Text>
-                        </View>
-                        <View style={{width: 200, height: 50}}>
-                            <Button onPress={this.logOut} title="Logout" />
-                        </View>
-                    </View>
                     <Topics navigator={this.props.navigator} title="topics"/>
                     </View>)
 			}
 		}
-
-        /*componentWillMount()
-        {
-            if(this.state.user !== null)
-            {
-                this.goToTopics();
-            }
-        }*/
-
     goToTopics()
     {
         this.props.navigator.push({
             id: 'topics',
         });
     }
-
+onActionSelected(position) {
+  if (position === 0) { // index of 'Settings'
+    }
+}
+  openDrawer() {
+        this.drawer.openDrawer();
+  }
+  goTo(page){
+    this.props.navigator.push({
+      id: 'createTopic'
+    });
+  }
   render() {
+      var navigationView = '';
+	  if(this.state.user === null){
+      navigationView = (
+            <View style={{flex: 1, flexDirection: 'row'}} >
+                <View>
+                    <Text onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
+                    <Text>Search Topics</Text>
+                    <Text>My Topics</Text>
+                    <Text>About</Text>
+                </View>
+            </View>
+        );
+    }
+    else{
+        navigationView = (
+            <View  style={{flex: 1}}>
+                <View style={{flex: 1, flexDirection: 'row'}} >
+                    <View style={{width: 150, height: 50}}>
+                        <Text>{this.state.user.email}</Text>
+                    </View>
+                    <View style={{width: 200, height: 50}}>
+                        <Button onPress={this.logOut} title="Logout" />
+                    </View>
+                </View>
+                    <View style={{flex: 9}}>
+                        <Text onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
+                        <Text>Search Topics</Text>
+                        <Text>My Topics</Text>
+                        <Text>About</Text>
+                    </View>
+                    
+            </View>
+        );
+    }
     return (
-      <View style={styles.landing}>
-          <View style={styles.imageLogo}>
-          <Image 
-           source={{uri: 'http://oi63.tinypic.com/2sai1aq.jpg'}}
-       style={{width: 71, height: 57}} />
-       </View>
+        <DrawerLayoutAndroid style={styles.landing}
+            drawerWidth={300}
+            ref={(_drawer) => this.drawer = _drawer}
+            drawerPosition={DrawerLayoutAndroid.positions.Left}
+            renderNavigationView={() => navigationView}>
+            <TouchableHighlight onPress={this.openDrawer}>
+                <Text>{'Open Drawer'}</Text>
+              </TouchableHighlight>
 		    {this.renderLoginButton()}
-      </View>
+          </DrawerLayoutAndroid>
     );
   }
 
 }
+
 
 const styles= StyleSheet.create({
     userUtilsView:{
@@ -221,7 +263,11 @@ const styles= StyleSheet.create({
     imageLogo:{
         flexDirection: 'column',
         alignItems:'center'
-    }
+    },
+  toolbar: {
+    backgroundColor: '#e9eaed',
+    height: 56,
+  },
     
 });
 
