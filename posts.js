@@ -13,8 +13,7 @@ import {
   Navigator,
   TouchableOpacity
 } from 'react-native';
- //import {NotificationsAndroid} from 'react-native-notifications';
- 
+ var PushNotification = require('react-native-push-notification');
 
 class Posts extends Component {
     constructor (props) 
@@ -29,7 +28,6 @@ class Posts extends Component {
         this.handleInputOnChange = this.handleInputOnChange.bind(this);
 
         this.getAllPosts(this.props.topicId, (postUserMail, postMessage, postId) => {
-
                 var postItem = {};
                 postItem["postUserMail"] = postUserMail;
                 postItem["postMessage"] = postMessage;
@@ -60,10 +58,11 @@ class Posts extends Component {
     {
         firebase.database().ref('post').orderByChild("topicId").equalTo(topicId).on('child_added', function(data) {
             callback(data.val().userMail, data.val().postText, data.key);
-            
-            PushNotification.localNotification({
-                message: data.val().userMail + " - " + data.val().postText
-            });
+            if(firebase.auth().currentUser.email != data.val().userMai){
+                PushNotification.localNotification({
+                    message: data.val().userMail + " - " + data.val().postText
+                });
+            }
         });
     }
 
@@ -108,9 +107,7 @@ class Posts extends Component {
                         <Text style={{fontWeight: "bold"}}>{rowData["postUserMail"]}</Text>
                         <Text>{rowData["postMessage"]}</Text>
                         </View>
-                </TouchableHighlight>
-            //renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
-            }/>
+                </TouchableHighlight>}/>
 
             </ScrollView>
         </View>
