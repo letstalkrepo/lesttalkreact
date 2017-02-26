@@ -103,9 +103,6 @@ class Posts extends Component {
 
             <Button onPress={this.goToTopics.bind(this)}  title="Back to Topics" color="#841584"/>
 
-            <TextInput 
-            id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
-            {this.renderPostButton()}
             
             <ScrollView style={{backgroundColor: '#efefef', height: 800, flex:1}} >
             <ListView dataSource={this.dataSource}
@@ -119,6 +116,10 @@ class Posts extends Component {
                 </TouchableHighlight>}/>
 
             </ScrollView>
+            <TextInput 
+            id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
+            {this.renderPostButton()}
+            
         </View>
         )
     }
