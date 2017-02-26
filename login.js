@@ -216,19 +216,49 @@ onActionSelected(position) {
     else{
         navigationView = (
             <View  style={{flex: 1}}>
-                <View style={{flex: 1, flexDirection: 'row'}} >
-                    <View style={{width: 150, height: 50}}>
-                        <Text>{this.state.user.email}</Text>
+                <View style={{flex: 3,backgroundColor: '#e9eaed',flexDirection: 'column',        justifyContent: 'space-between', }} >
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{flex:1}}>
+                            <View style={styles.circle}>
+                                <Image source={require('./images/logo.png')} 
+                                style={{marginLeft: 20, marginTop: 10, width: 30, height: 30}}/>
+                            </View>
+                        </View>
+                        <View style={{ marginTop: 10, alignItems:'flex-end' }}>
+                            <View style={{width: 100, height: 50, marginRight: 10}}>
+                                <Button onPress={this.logOut} title="Logout" />
+                            </View>
+                        </View>
                     </View>
-                    <View style={{width: 200, height: 50}}>
-                        <Button onPress={this.logOut} title="Logout" />
+                    <View  style={{marginBottom: 10, marginLeft:20}}>
+                        <Text style={{fontSize: 20}}>{this.state.user.email}</Text>
                     </View>
                 </View>
                     <View style={{flex: 9}}>
-                        <Text onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
-                        <Text>Search Topics</Text>
-                        <Text>My Topics</Text>
-                        <Text>About</Text>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/fire.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/new.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Create Topic</Text>
+                        </View>
+                        <View style={[styles.rowMenu, styles.selected]}>
+                             <Image source={require('./images/category.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Categories</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/search.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Search Topic</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/mytopics.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>My Topics</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/about.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>About</Text>
+                        </View>
                     </View>
                     
             </View>
@@ -268,6 +298,27 @@ const styles= StyleSheet.create({
     backgroundColor: '#e9eaed',
     height: 56,
   },
+  rowMenu:{
+      flexDirection: 'row', 
+      paddingTop: 10, 
+      paddingLeft: 20,
+      paddingBottom: 10
+  },
+  textMenu:{
+      marginLeft:20,
+      fontSize: 20
+  },
+  selected:{
+      backgroundColor: '#e9eaed',
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 100/2,
+    backgroundColor: 'white',
+    marginLeft:20,
+    marginTop: 10
+}
     
 });
 

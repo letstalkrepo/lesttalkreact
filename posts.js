@@ -41,10 +41,6 @@ class Posts extends Component {
                 
                 this.forceUpdate();
         });
-        BackAndroid.addEventListener('hardwareBackPress', function() {
-            _this.goToTopics();
-            return true;
-        });
     }
 
     pocessGetAllPosts()
