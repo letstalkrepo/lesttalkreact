@@ -45,7 +45,6 @@ class Topics extends Component {
     getAllTopics(callback)
     {
         firebase.database().ref('topics').on('child_added', function(data) {
-            //callback(data.val().title, data.key);
             callback(data.val().title, data.key);
         });
     }
@@ -74,11 +73,6 @@ class Topics extends Component {
           this.renderScene()
         )
     }
-/*
-    <Card.Media
-        image={<Image source={require('./logo.png')} />}
-        overlay
-    />  */
  renderScene()
   {
     return (

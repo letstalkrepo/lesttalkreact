@@ -24,7 +24,9 @@ class Navigation extends Component {
     }
 
 render() {
-    return (<Navigator style={styles.container} initialRoute={{id: 'splash'}} renderScene={this.navigatorRenderScene}/>);
+    return (<Navigator 
+    initialRoute={{id: 'splash'}} 
+    renderScene={this.navigatorRenderScene}/>);
   }
 
   navigatorRenderScene(route, navigator) {
@@ -44,14 +46,6 @@ render() {
   }
 }
 
-var styles = StyleSheet.create({
-  container: {
-    //flex: 1,
-    //justifyContent: 'center',
-    //alignItems: 'center',
-    //backgroundColor: '#F5FCFF',
-  },
-});
 
 
 export default Navigation;

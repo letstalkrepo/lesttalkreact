@@ -14,8 +14,6 @@ import {
 import firebase from 'firebase';
 import Topics from './topics.js';
 var ToolbarAndroid = require('ToolbarAndroid');
-//import FireAuth from 'react-native-firebase-auth';
-//import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 var nativeImageSource = require('nativeImageSource');
 var PushNotification = require('react-native-push-notification');
 class Login extends Component {
@@ -50,24 +48,7 @@ class Login extends Component {
             popInitialNotification: true,
             requestPermissions: true,
         });
-        /*
-         GoogleSignin.hasPlayServices({autoResolve: true}).then(() => {
-            GoogleSignin.configure({
-                scopes: [
-                    'email', 'profile', 'https://www.googleapis.com/auth/plus.profile.emails.read', 'https://www.googleapis.com/auth/plus.login'
-                ],
-                webClientId: "67803456662-37a33lqirl0qe12vn7tr78jpqv01418c.apps.googleusercontent.com",
-                offlineAccess: true
-            })
-            .then(() => {
-                GoogleSignin.currentUserAsync().then((user) => {
-                    console.log('USER', user);
-                    _this.state.user = user;
-                    _this.renderLoginButton();
-                    _this.forceUpdate();
-                }).done()
-            });
-         });*/
+        
 		}
 		logIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -111,14 +92,7 @@ class Login extends Component {
                 console.log('Signed Out');
             }, function(error) {
                 console.error('Sign Out Error', error);
-            });/*
-            GoogleSignin.signOut()
-            .then(() => {
-            console.log('out');
-            })
-            .catch((err) => {
-
-            });*/
+            });
              _this.state.user = null;
             _this.renderLoginButton();
             _this.forceUpdate();
@@ -130,25 +104,6 @@ class Login extends Component {
             }
             else return(<Text />);
         }
-        _signIn(){
-            /*
-            GoogleSignin.signIn()
-                .then((user) => {
-                    _this.state.user = user;
-                    _this.renderLoginButton();
-                    _this.forceUpdate();
-                })
-                .catch((err) => {
-                })
-            .done();*/
-        }
-        /*
-        <GoogleSigninButton
-                style={{width: 312, height: 48}}
-                size={GoogleSigninButton.Size.Wide}
-                color={GoogleSigninButton.Color.Light}
-                onPress={this._signIn.bind(this)}/>
-                */
         
 		renderLoginButton(){
 			if(this.state.user === null){
@@ -164,7 +119,6 @@ class Login extends Component {
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
                 <TextInput  id="passwordInput" 
-                //onSubmitEditing={this.logIn}
                 onChangeText={(password) => this.setState({password})} 
                 placeholder="Password"/>
                 
@@ -188,7 +142,7 @@ class Login extends Component {
         });
     }
 onActionSelected(position) {
-  if (position === 0) { // index of 'Settings'
+  if (position === 0) {
     }
 }
   openDrawer() {
