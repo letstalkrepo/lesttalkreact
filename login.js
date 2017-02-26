@@ -224,9 +224,14 @@ onActionSelected(position) {
             ref={(_drawer) => this.drawer = _drawer}
             drawerPosition={DrawerLayoutAndroid.positions.Left}
             renderNavigationView={() => navigationView}>
-            <TouchableHighlight onPress={this.openDrawer}>
-                <Text>{'Open Drawer'}</Text>
-              </TouchableHighlight>
+            <View style={styles.header}>
+                <TouchableHighlight onPress={this.openDrawer} style={styles.menuIcon}>
+                    <View style={{flexDirection: 'row'}}>
+                        <Image source={require('./images/menu.png')}/>
+                        <Text style={styles.textMenu}>Trending Topics</Text>
+                    </View>
+                </TouchableHighlight>
+            </View>
 		    {this.renderLoginButton()}
           </DrawerLayoutAndroid>
     );
@@ -240,7 +245,7 @@ const styles= StyleSheet.create({
         height: 50
     },
     landing:{
-        backgroundColor: 'aqua',
+        backgroundColor: 'grey',
         flex: 1,
         padding: 10
     },
@@ -272,7 +277,13 @@ const styles= StyleSheet.create({
     backgroundColor: 'white',
     marginLeft:20,
     marginTop: 10
-}
+},
+    header:{
+        backgroundColor: 'aqua'
+    },
+    menuIcon:{
+        padding: 10
+    }
     
 });
 

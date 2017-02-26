@@ -26,7 +26,9 @@ class Navigation extends Component {
 render() {
     return (<Navigator 
     initialRoute={{id: 'splash'}} 
-    renderScene={this.navigatorRenderScene}/>);
+    renderScene={this.navigatorRenderScene} 
+    configureScene={(route, routeStack) =>
+    Navigator.SceneConfigs.FloatFromRight}/>);
   }
 
   navigatorRenderScene(route, navigator) {

@@ -20,8 +20,12 @@ class CreateTopic extends Component {
     constructor (props) 
     {
         super(props);
-        
         this.state = {newTopic: '', inputValue: ''};
+        
+        BackAndroid.addEventListener('hardwareBackPress', function() {
+            _this.props.navigator.pop();
+            return true;
+        });
     }
     
     saveBBDD (typeName)

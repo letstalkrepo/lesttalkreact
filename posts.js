@@ -50,10 +50,13 @@ class Posts extends Component {
 
     saveBBDD (typeName)
     {
-        const itemToSave = {userId: firebase.auth().currentUser.uid, userMail: firebase.auth().currentUser.email, postText: this.state.postMessage, topicId: this.props.topicId};
-        const dbRef = firebase.database().ref(typeName);
-        const newItemToSave = dbRef.push();
-        newItemToSave.set(itemToSave);
+        if(this.state.postMessage != ""){
+            const itemToSave = {userId: firebase.auth().currentUser.uid, userMail: firebase.auth().currentUser.email, postText: this.state.postMessage, topicId: this.props.topicId};
+            const dbRef = firebase.database().ref(typeName);
+            const newItemToSave = dbRef.push();
+            newItemToSave.set(itemToSave);
+            this.state.postMessage = "";
+        }
     }
 
     getAllPosts(topicId, callback)
@@ -78,8 +81,12 @@ class Posts extends Component {
     }
 
     renderPostButton(){
-        return (<Button onPress={() => this.saveBBDD('post')} 
-        title="Post message"/>)
+        return (
+        <View style={{margin: 10}}>
+            <Button
+            onPress={() => this.saveBBDD('post')} 
+            title="Post"/>
+        </View>)
     }
 
   goToTopics() {
@@ -96,15 +103,11 @@ class Posts extends Component {
     {
         return (
         <View style={{flex:1}}>
-
-            <Button onPress={this.goToTopics.bind(this)}  title="Back to Topics" color="#841584"/>
-
-            
             <ScrollView style={{backgroundColor: '#efefef', height: 800, flex:1}} >
-            <ListView dataSource={this.dataSource}
-            
+            <ListView 
+            dataSource={this.dataSource}
             renderRow={(rowData) => 
-                <TouchableHighlight onPress={this.removePost.bind(this, rowData["postId"])}>
+                <TouchableHighlight>
                     <View style={styles.text} elevation={5}>
                         <Text style={{fontWeight: "bold"}}>{rowData["postUserMail"]}</Text>
                         <Text>{rowData["postMessage"]}</Text>
@@ -112,9 +115,14 @@ class Posts extends Component {
                 </TouchableHighlight>}/>
 
             </ScrollView>
-            <TextInput 
-            id="inputMessage" onChangeText={(postMessage) => this.setState({postMessage})}/>
-            {this.renderPostButton()}
+            <View style={{flexDirection: 'row'}} >
+                <TextInput 
+                style={{flex: 9, margin: 10}}
+                id="inputMessage" 
+                value={this.state.postMessage}
+                onChangeText={(postMessage) => this.setState({postMessage})}/>
+                {this.renderPostButton()}
+            </View>
             
         </View>
         )
