@@ -13,7 +13,9 @@ import {
   TouchableOpacity,
   Image
 } from 'react-native';
-import { Icon, Button, Card } from 'react-native-material-design';
+import { Button, Card } from 'react-native-material-design';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class Topics extends Component {
     constructor () 
@@ -43,7 +45,6 @@ class Topics extends Component {
     getAllTopics(callback)
     {
         firebase.database().ref('topics').on('child_added', function(data) {
-            //callback(data.val().title, data.key);
             callback(data.val().title, data.key);
         });
     }
@@ -72,11 +73,6 @@ class Topics extends Component {
           this.renderScene()
         )
     }
-/*
-    <Card.Media
-        image={<Image source={require('./logo.png')} />}
-        overlay
-    />  */
  renderScene()
   {
     return (
@@ -85,13 +81,17 @@ class Topics extends Component {
                 <ListView dataSource={this.dataSource} 
                 renderRow={(rowData) =>
                     <Card onPress={this.goToPosts.bind(this, rowData["topicId"])}>
-                        
                         <Card.Body>
                             <Text>{rowData["topicTitle"]}</Text>
                         </Card.Body>
                     </Card>
                 }/>
             </ScrollView>
+            <ActionButton  buttonColor="rgba(231,76,60,1)">
+                <ActionButton.Item buttonColor='#9b59b6' title="New Topic" onPress={() => console.log("notes tapped!")}>
+                    <Icon name="md-create" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+            </ActionButton>
         </View>
         );
   }
@@ -112,7 +112,12 @@ const styles = StyleSheet.create({
         padding: 7,
         margin: 3,
         backgroundColor: '#FFFFFF',
-  } 
+    } ,
+    actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
 });
 
 export default Topics;

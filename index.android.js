@@ -6,7 +6,8 @@ import {
   View,
   Button,
   Navigator,
-  TouchableOpacity
+  TouchableOpacity,
+  BackAndroid
 } from 'react-native';
 import firebase from 'firebase';
 import Splash from './splash.js';
@@ -24,6 +25,10 @@ import Navigation from './navigation.js'
     messagingSenderId: "67803456662"
   });
   
+BackAndroid.addEventListener('hardwareBackPress', function() {
+    _this.props.navigator.pop();
+    return true;
+});
 export default class letstalk extends Component {
 constructor () {
 		super();

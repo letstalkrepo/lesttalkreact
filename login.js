@@ -14,8 +14,6 @@ import {
 import firebase from 'firebase';
 import Topics from './topics.js';
 var ToolbarAndroid = require('ToolbarAndroid');
-//import FireAuth from 'react-native-firebase-auth';
-//import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 var nativeImageSource = require('nativeImageSource');
 var PushNotification = require('react-native-push-notification');
 class Login extends Component {
@@ -50,24 +48,7 @@ class Login extends Component {
             popInitialNotification: true,
             requestPermissions: true,
         });
-        /*
-         GoogleSignin.hasPlayServices({autoResolve: true}).then(() => {
-            GoogleSignin.configure({
-                scopes: [
-                    'email', 'profile', 'https://www.googleapis.com/auth/plus.profile.emails.read', 'https://www.googleapis.com/auth/plus.login'
-                ],
-                webClientId: "67803456662-37a33lqirl0qe12vn7tr78jpqv01418c.apps.googleusercontent.com",
-                offlineAccess: true
-            })
-            .then(() => {
-                GoogleSignin.currentUserAsync().then((user) => {
-                    console.log('USER', user);
-                    _this.state.user = user;
-                    _this.renderLoginButton();
-                    _this.forceUpdate();
-                }).done()
-            });
-         });*/
+        
 		}
 		logIn() {
             const provider = new firebase.auth.GoogleAuthProvider();
@@ -111,14 +92,7 @@ class Login extends Component {
                 console.log('Signed Out');
             }, function(error) {
                 console.error('Sign Out Error', error);
-            });/*
-            GoogleSignin.signOut()
-            .then(() => {
-            console.log('out');
-            })
-            .catch((err) => {
-
-            });*/
+            });
              _this.state.user = null;
             _this.renderLoginButton();
             _this.forceUpdate();
@@ -130,25 +104,6 @@ class Login extends Component {
             }
             else return(<Text />);
         }
-        _signIn(){
-            /*
-            GoogleSignin.signIn()
-                .then((user) => {
-                    _this.state.user = user;
-                    _this.renderLoginButton();
-                    _this.forceUpdate();
-                })
-                .catch((err) => {
-                })
-            .done();*/
-        }
-        /*
-        <GoogleSigninButton
-                style={{width: 312, height: 48}}
-                size={GoogleSigninButton.Size.Wide}
-                color={GoogleSigninButton.Color.Light}
-                onPress={this._signIn.bind(this)}/>
-                */
         
 		renderLoginButton(){
 			if(this.state.user === null){
@@ -164,7 +119,6 @@ class Login extends Component {
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
                 <TextInput  id="passwordInput" 
-                //onSubmitEditing={this.logIn}
                 onChangeText={(password) => this.setState({password})} 
                 placeholder="Password"/>
                 
@@ -188,7 +142,7 @@ class Login extends Component {
         });
     }
 onActionSelected(position) {
-  if (position === 0) { // index of 'Settings'
+  if (position === 0) {
     }
 }
   openDrawer() {
@@ -216,19 +170,49 @@ onActionSelected(position) {
     else{
         navigationView = (
             <View  style={{flex: 1}}>
-                <View style={{flex: 1, flexDirection: 'row'}} >
-                    <View style={{width: 150, height: 50}}>
-                        <Text>{this.state.user.email}</Text>
+                <View style={{flex: 3,backgroundColor: '#e9eaed',flexDirection: 'column',        justifyContent: 'space-between', }} >
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={{flex:1}}>
+                            <View style={styles.circle}>
+                                <Image source={require('./images/logo.png')} 
+                                style={{marginLeft: 20, marginTop: 10, width: 30, height: 30}}/>
+                            </View>
+                        </View>
+                        <View style={{ marginTop: 10, alignItems:'flex-end' }}>
+                            <View style={{width: 100, height: 50, marginRight: 10}}>
+                                <Button onPress={this.logOut} title="Logout" />
+                            </View>
+                        </View>
                     </View>
-                    <View style={{width: 200, height: 50}}>
-                        <Button onPress={this.logOut} title="Logout" />
+                    <View  style={{marginBottom: 10, marginLeft:20}}>
+                        <Text style={{fontSize: 20}}>{this.state.user.email}</Text>
                     </View>
                 </View>
                     <View style={{flex: 9}}>
-                        <Text onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
-                        <Text>Search Topics</Text>
-                        <Text>My Topics</Text>
-                        <Text>About</Text>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/fire.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/new.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Create Topic</Text>
+                        </View>
+                        <View style={[styles.rowMenu, styles.selected]}>
+                             <Image source={require('./images/category.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Categories</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/search.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Search Topic</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/mytopics.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>My Topics</Text>
+                        </View>
+                        <View style={styles.rowMenu}>
+                             <Image source={require('./images/about.png')}/>
+                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>About</Text>
+                        </View>
                     </View>
                     
             </View>
@@ -240,9 +224,14 @@ onActionSelected(position) {
             ref={(_drawer) => this.drawer = _drawer}
             drawerPosition={DrawerLayoutAndroid.positions.Left}
             renderNavigationView={() => navigationView}>
-            <TouchableHighlight onPress={this.openDrawer}>
-                <Text>{'Open Drawer'}</Text>
-              </TouchableHighlight>
+            <View style={styles.header}>
+                <TouchableHighlight onPress={this.openDrawer} style={styles.menuIcon}>
+                    <View style={{flexDirection: 'row'}}>
+                        <Image source={require('./images/menu.png')}/>
+                        <Text style={styles.textMenu}>Trending Topics</Text>
+                    </View>
+                </TouchableHighlight>
+            </View>
 		    {this.renderLoginButton()}
           </DrawerLayoutAndroid>
     );
@@ -256,7 +245,7 @@ const styles= StyleSheet.create({
         height: 50
     },
     landing:{
-        backgroundColor: 'aqua',
+        backgroundColor: 'grey',
         flex: 1,
         padding: 10
     },
@@ -268,6 +257,33 @@ const styles= StyleSheet.create({
     backgroundColor: '#e9eaed',
     height: 56,
   },
+  rowMenu:{
+      flexDirection: 'row', 
+      paddingTop: 10, 
+      paddingLeft: 20,
+      paddingBottom: 10
+  },
+  textMenu:{
+      marginLeft:20,
+      fontSize: 20
+  },
+  selected:{
+      backgroundColor: '#e9eaed',
+  },
+  circle: {
+    width: 60,
+    height: 60,
+    borderRadius: 100/2,
+    backgroundColor: 'white',
+    marginLeft:20,
+    marginTop: 10
+},
+    header:{
+        backgroundColor: 'aqua'
+    },
+    menuIcon:{
+        padding: 10
+    }
     
 });
 
