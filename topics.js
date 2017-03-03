@@ -80,7 +80,7 @@ class Topics extends Component {
             <ScrollView>
                 <ListView dataSource={this.dataSource} 
                 renderRow={(rowData) =>
-                    <Card onPress={this.goToPosts.bind(this, rowData["topicId"])}>
+                    <Card onPress={this.goToPosts.bind(this, rowData["topicId"])} style={styles.card}>
                         <Card.Body>
                             <Text>{rowData["topicTitle"]}</Text>
                         </Card.Body>
@@ -88,7 +88,7 @@ class Topics extends Component {
                 }/>
             </ScrollView>
             <ActionButton  buttonColor="rgba(231,76,60,1)">
-                <ActionButton.Item buttonColor='#9b59b6' title="New Topic" onPress={() => console.log("notes tapped!")}>
+                <ActionButton.Item buttonColor='#ed4f3e' title="New Topic" onPress={() => console.log("notes tapped!")}>
                     <Icon name="md-create" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
             </ActionButton>
@@ -99,6 +99,11 @@ class Topics extends Component {
 }
 
 const styles = StyleSheet.create({
+    card:{
+        margin: 1, 
+        height: 80,
+         justifyContent: 'center',
+    },
     newTopicBlock: {
         padding: 7,
         margin: 3,

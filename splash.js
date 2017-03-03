@@ -29,8 +29,8 @@ render() {
 
   renderScene() {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{color: 'gray', fontWeight: 'bold', fontSize: 30}}>Let's Talk</Text>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#ed4f3e'}}>
+          <Text style={{color: '#ffffff', fontWeight: 'bold', fontSize: 30}}>Let's Talk</Text>
       </View>
     );
   }

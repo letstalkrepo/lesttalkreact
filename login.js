@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import firebase from 'firebase';
 import Topics from './topics.js';
+import { Icon } from 'react-native-material-design';
 var ToolbarAndroid = require('ToolbarAndroid');
 var nativeImageSource = require('nativeImageSource');
 var PushNotification = require('react-native-push-notification');
@@ -150,7 +151,7 @@ onActionSelected(position) {
   }
   goTo(page){
     this.props.navigator.push({
-      id: 'createTopic'
+      id: page
     });
   }
   render() {
@@ -170,47 +171,47 @@ onActionSelected(position) {
     else{
         navigationView = (
             <View  style={{flex: 1}}>
-                <View style={{flex: 3,backgroundColor: '#e9eaed',flexDirection: 'column',        justifyContent: 'space-between', }} >
+                <View style={{flex: 3,backgroundColor: '#ed4f3e',flexDirection: 'column',        justifyContent: 'space-between', }} >
                     <View style={{flexDirection: 'row'}}>
                         <View style={{flex:1}}>
                             <View style={styles.circle}>
-                                <Image source={require('./images/logo.png')} 
-                                style={{marginLeft: 20, marginTop: 10, width: 30, height: 30}}/>
+                                <Icon name="person" />
                             </View>
                         </View>
                         <View style={{ marginTop: 10, alignItems:'flex-end' }}>
                             <View style={{width: 100, height: 50, marginRight: 10}}>
                                 <Button onPress={this.logOut} title="Logout" />
+                                    
                             </View>
                         </View>
                     </View>
                     <View  style={{marginBottom: 10, marginLeft:20}}>
-                        <Text style={{fontSize: 20}}>{this.state.user.email}</Text>
+                        <Text style={{fontSize: 16, color: '#ffffff'}}>{this.state.user.email}</Text>
                     </View>
                 </View>
                     <View style={{flex: 9}}>
                         <View style={styles.rowMenu}>
-                             <Image source={require('./images/fire.png')}/>
+                         <Icon name="whatshot" style={styles.menuIcon} />
                              <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
                         </View>
                         <View style={styles.rowMenu}>
-                             <Image source={require('./images/new.png')}/>
+                         <Icon name="create" style={styles.menuIcon} />
                              <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Create Topic</Text>
                         </View>
                         <View style={[styles.rowMenu, styles.selected]}>
-                             <Image source={require('./images/category.png')}/>
+                            <Icon name="list" style={styles.menuIcon} />
                              <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Categories</Text>
                         </View>
                         <View style={styles.rowMenu}>
-                             <Image source={require('./images/search.png')}/>
+                         <Icon name="search" style={styles.menuIcon} />
                              <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Search Topic</Text>
                         </View>
                         <View style={styles.rowMenu}>
-                             <Image source={require('./images/mytopics.png')}/>
-                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>My Topics</Text>
+                         <Icon name="favorite" style={styles.menuIcon} />
+                             <Text style={styles.textMenu} onPress={this.goToTopics.bind(this)}>My Topics</Text>
                         </View>
                         <View style={styles.rowMenu}>
-                             <Image source={require('./images/about.png')}/>
+                                <Icon name="people" style={styles.menuIcon} />
                              <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>About</Text>
                         </View>
                     </View>
@@ -225,10 +226,10 @@ onActionSelected(position) {
             drawerPosition={DrawerLayoutAndroid.positions.Left}
             renderNavigationView={() => navigationView}>
             <View style={styles.header}>
-                <TouchableHighlight onPress={this.openDrawer} style={styles.menuIcon}>
+                <TouchableHighlight onPress={this.openDrawer} style={styles.barMenuIcon}>
                     <View style={{flexDirection: 'row'}}>
-                        <Image source={require('./images/menu.png')}/>
-                        <Text style={styles.textMenu}>Trending Topics</Text>
+                         <Icon name="menu" color="rgba(255,255,255,.9)" />
+                        <Text style={styles.textBar}>Trending Topics</Text>
                     </View>
                 </TouchableHighlight>
             </View>
@@ -263,9 +264,18 @@ const styles= StyleSheet.create({
       paddingLeft: 20,
       paddingBottom: 10
   },
+  textBar:{
+      marginLeft:20,
+      fontSize: 20,
+      fontWeight: 'bold',
+      fontFamily: 'roboto',
+      color: '#ffffff'
+  },
   textMenu:{
       marginLeft:20,
-      fontSize: 20
+      fontSize: 14,
+      fontWeight: 'bold',
+      fontFamily: 'roboto'
   },
   selected:{
       backgroundColor: '#e9eaed',
@@ -276,15 +286,23 @@ const styles= StyleSheet.create({
     borderRadius: 100/2,
     backgroundColor: 'white',
     marginLeft:20,
-    marginTop: 10
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+
 },
     header:{
-        backgroundColor: 'aqua'
+        backgroundColor: '#ed4f3e'
+    },
+    barMenuIcon:{
+        padding: 10
     },
     menuIcon:{
-        padding: 10
+        fontSize: 20
     }
     
 });
+
+//'#4874a8' azul lila
 
 export default Login;

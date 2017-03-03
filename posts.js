@@ -99,25 +99,48 @@ class Posts extends Component {
         this.goToTopics();
   }
 
+    renderMyRow(rowData) {
+        //console.log(this); // Output: null
+        //var price = rowData.price_formatted.split(' ')[0];
+        if(rowData["postUserMail"] == firebase.auth().currentUser.email)
+        {
+            return(
+            <TouchableHighlight style={styles.thPostRight}>
+                    <View style={[styles.text, styles.textRight]} elevation={5}>
+                        <Text style={{fontWeight: "bold", color: '#ffffff'}}>{rowData["postUserMail"]}</Text>
+                        <Text style={{color: '#ffffff'}}>{rowData["postMessage"]}</Text>
+                        </View>
+                </TouchableHighlight>
+            );
+        }
+        else
+        {
+            return(
+            <TouchableHighlight style={styles.thPostLeft}>
+                    <View style={[styles.text, styles.textLeft]} elevation={5}>
+                        <Text style={{fontWeight: "bold", color: '#ffffff'}}>{rowData["postUserMail"]}</Text>
+                        <Text style={{color: '#ffffff'}}>{rowData["postMessage"]}</Text>
+                        </View>
+                </TouchableHighlight>
+            );
+        }
+        
+    }
+
     render () 
     {
         return (
         <View style={{flex:1}}>
-            <ScrollView style={{backgroundColor: '#efefef', height: 800, flex:1}} >
-            <ListView 
+            <ScrollView style={{backgroundColor: '#efefef', flex:0.6}} >
+            <ListView style={{flex: 1}}
             dataSource={this.dataSource}
-            renderRow={(rowData) => 
-                <TouchableHighlight>
-                    <View style={styles.text} elevation={5}>
-                        <Text style={{fontWeight: "bold"}}>{rowData["postUserMail"]}</Text>
-                        <Text>{rowData["postMessage"]}</Text>
-                        </View>
-                </TouchableHighlight>}/>
+            renderRow={this.renderMyRow}
+            />
 
             </ScrollView>
             <View style={{flexDirection: 'row'}} >
                 <TextInput 
-                style={{flex: 9, margin: 10}}
+                style={{flex: 1, margin: 10}}
                 id="inputMessage" 
                 value={this.state.postMessage}
                 onChangeText={(postMessage) => this.setState({postMessage})}/>
@@ -130,10 +153,29 @@ class Posts extends Component {
 }
 
 const styles = StyleSheet.create({
+    thPostLeft: {
+        flexDirection: 'row',
+        flex: 0.8,
+        justifyContent: 'flex-start',
+        
+    },
+    thPostRight: {
+        flexDirection: 'row',
+        flex: 0.8,
+        justifyContent: 'flex-end',
+    },
+    textLeft: {
+        backgroundColor: '#9eb6c1',
+        maxWidth: 300,
+    },
+    textRight:{
+        backgroundColor: '#73d99c',
+        maxWidth: 300,
+    },
   text: {
     padding: 7,
     margin: 3,
-    backgroundColor: '#FFFFFF',
+    borderRadius: 3,
   },
   photo: {
     height: 40,
