@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import PostMessage from './postMessage.js';
 import {
   AppRegistry,
   StyleSheet,
@@ -99,44 +100,15 @@ class Posts extends Component {
         this.goToTopics();
   }
 
-    renderMyRow(rowData) {
-        //console.log(this); // Output: null
-        //var price = rowData.price_formatted.split(' ')[0];
-        if(rowData["postUserMail"] == firebase.auth().currentUser.email)
-        {
-            return(
-            <TouchableHighlight style={styles.thPostRight}>
-                    <View style={[styles.text, styles.textRight]} elevation={5}>
-                        <Text style={{fontWeight: "bold", color: '#ffffff'}}>{rowData["postUserMail"]}</Text>
-                        <Text style={{color: '#ffffff'}}>{rowData["postMessage"]}</Text>
-                        </View>
-                </TouchableHighlight>
-            );
-        }
-        else
-        {
-            return(
-            <TouchableHighlight style={styles.thPostLeft}>
-                    <View style={[styles.text, styles.textLeft]} elevation={5}>
-                        <Text style={{fontWeight: "bold", color: '#ffffff'}}>{rowData["postUserMail"]}</Text>
-                        <Text style={{color: '#ffffff'}}>{rowData["postMessage"]}</Text>
-                        </View>
-                </TouchableHighlight>
-            );
-        }
-        
-    }
-
     render () 
     {
         return (
         <View style={{flex:1}}>
             <ScrollView style={{backgroundColor: '#efefef', flex:0.6}} >
-            <ListView style={{flex: 1}}
-            dataSource={this.dataSource}
-            renderRow={this.renderMyRow}
-            />
-
+                <ListView style={{flex: 1}}
+                    dataSource={this.dataSource}
+                    renderRow={(data) => <PostMessage {...data} />}
+                />
             </ScrollView>
             <View style={{flexDirection: 'row'}} >
                 <TextInput 
@@ -146,47 +118,9 @@ class Posts extends Component {
                 onChangeText={(postMessage) => this.setState({postMessage})}/>
                 {this.renderPostButton()}
             </View>
-            
         </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    thPostLeft: {
-        flexDirection: 'row',
-        flex: 0.8,
-        justifyContent: 'flex-start',
-        
-    },
-    thPostRight: {
-        flexDirection: 'row',
-        flex: 0.8,
-        justifyContent: 'flex-end',
-    },
-    textLeft: {
-        backgroundColor: '#9eb6c1',
-        maxWidth: 300,
-    },
-    textRight:{
-        backgroundColor: '#73d99c',
-        maxWidth: 300,
-    },
-  text: {
-    padding: 7,
-    margin: 3,
-    borderRadius: 3,
-  },
-  photo: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-  },
-  separator: {
-    flex: 1,
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#8E8E8E',
-  },
-});
 
 export default Posts;
