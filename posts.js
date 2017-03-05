@@ -28,7 +28,6 @@ class Posts extends Component {
         this.messages = [];
         this.dataSource = ds.cloneWithRows(this.messages);
         this.handleInputOnChange = this.handleInputOnChange.bind(this);
-        _this = this;
         this.postRef = firebase.database().ref('post').orderByChild("topicId").equalTo(this.props.topicId);
         this.getAllPosts(this.props.topicId, (postUserMail, postMessage, postId) => {
                 var postItem = {};
@@ -103,8 +102,8 @@ class Posts extends Component {
     render () 
     {
         return (
-        <View style={{flex:1}}>
-            <ScrollView style={{backgroundColor: '#efefef', flex:0.6}} >
+        <View style={{flex:1, backgroundColor: '#efefef'}}>
+            <ScrollView style={{backgroundColor: '#efefef', flex:1}} >
                 <ListView style={{flex: 1}}
                     dataSource={this.dataSource}
                     renderRow={(data) => <PostMessage {...data} />}

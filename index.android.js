@@ -32,6 +32,12 @@ BackAndroid.addEventListener('hardwareBackPress', function() {
 export default class letstalk extends Component {
 constructor () {
 		super();
+    this.state = {
+        mail: '',
+        password: '',
+        user: null,
+        errorMessage: ''
+    };
   }
   
   render() {

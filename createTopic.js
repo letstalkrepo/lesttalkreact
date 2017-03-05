@@ -12,7 +12,8 @@ import {
   TouchableHighlight,
   Navigator,
   TouchableOpacity,
-  BackAndroid
+  BackAndroid,
+  ToastAndroid
 } from 'react-native';
 
 class CreateTopic extends Component {
@@ -22,10 +23,6 @@ class CreateTopic extends Component {
         super(props);
         this.state = {newTopic: '', inputValue: ''};
         
-        BackAndroid.addEventListener('hardwareBackPress', function() {
-            _this.props.navigator.pop();
-            return true;
-        });
     }
     
     saveBBDD (typeName)
@@ -35,11 +32,13 @@ class CreateTopic extends Component {
         const newItemToSave = dbRef.push();
         newItemToSave.set(itemToSave);
         this.state.newTopic = '';
+        ToastAndroid.show("Topic created", ToastAndroid.LONG);
+        _this.props.navigator.pop();
     }
     render () 
     {
         return (
-        <View style={{flex: 1}} >
+        <View style={{backgroundColor: '#efefef'}}>
             <Text style={styles.newTopicText}>New topic</Text>
             <TextInput 
             value={this.state.newTopic}

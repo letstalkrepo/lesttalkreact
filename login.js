@@ -4,40 +4,37 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   TextInput,
   Navigator,
   Image,
   DrawerLayoutAndroid,
-  TouchableHighlight
+  TouchableHighlight,
+  Button,
+  ToastAndroid
 } from 'react-native';
 import firebase from 'firebase';
 import Topics from './topics.js';
 import { Icon } from 'react-native-material-design';
+import userData from './userData.js';
 var ToolbarAndroid = require('ToolbarAndroid');
 var nativeImageSource = require('nativeImageSource');
 var PushNotification = require('react-native-push-notification');
 class Login extends Component {
     constructor () {
 		super();
-        this.state = {
-            mail: '',
-            password: '',
-            user: null,
-            errorMessage: ''
-        };
+        
         this.logIn = this.logIn.bind(this);
         this.logOut = this.logOut.bind(this);
         this.register = this.register.bind(this);
         this.renderError = this.renderError.bind(this);
 		this.renderLoginButton = this.renderLoginButton.bind(this);
-        
         this.openDrawer = this.openDrawer.bind(this);
         _this = this;
         firebase.auth().onAuthStateChanged(function(user) {
-                _this.state.user = user;
+                userData.state.user = user;
                 _this.renderLoginButton();
                 _this.forceUpdate();
+                _this.props.navigator.forceUpdate();
             })
         PushNotification.configure({
             onRegister: function(token) {
@@ -65,7 +62,7 @@ class Login extends Component {
                 else{
                     _this.state.errorMessage = 'Error. Try again';
                 }
-                _this.forceUpdate();
+                _this.renderError();
             });
         }
 
@@ -83,7 +80,7 @@ class Login extends Component {
                 else{
                     _this.state.errorMessage = 'Error. Try again';
                 }
-                _this.forceUpdate();
+                _this.renderError();
             });
         }
 
@@ -101,31 +98,26 @@ class Login extends Component {
 		
         renderError(){
             if(_this.state.errorMessage != ""){
-                return(<Text style={{color: 'red'}}>{_this.state.errorMessage}</Text>);
+                ToastAndroid.show(_this.state.errorMessage, ToastAndroid.LONG);
             }
-            else return(<Text />);
         }
         
 		renderLoginButton(){
-			if(this.state.user === null){
+			if(userData.state.user === null){
 				//No esta logueado
-				return (<View>
+				return (<View style={{backgroundColor: '#efefef'}}>
                     
           <View style={styles.imageLogo}>
                 <Image 
                 source={{uri: 'http://oi63.tinypic.com/2sai1aq.jpg'}}
             style={{width: 71, height: 57}} />
             </View>
-                    <TextInput  id="mailInput" 
+                <TextInput  id="mailInput" 
                 onChangeText={(mail) => this.setState({mail})} 
                 placeholder="Mail"/>
                 <TextInput  id="passwordInput" 
                 onChangeText={(password) => this.setState({password})} 
                 placeholder="Password"/>
-                
-                {this.renderError()}
-                
-                
                 <Button onPress={this.logIn} title="Login" />
                 <Text/>
                 <View><Button onPress={this.register} title="Register" /></View></View>)
@@ -155,86 +147,10 @@ onActionSelected(position) {
     });
   }
   render() {
-      var navigationView = '';
-	  if(this.state.user === null){
-      navigationView = (
-            <View style={{flex: 1, flexDirection: 'row'}} >
-                <View>
-                    <Text onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
-                    <Text>Search Topics</Text>
-                    <Text>My Topics</Text>
-                    <Text>About</Text>
-                </View>
-            </View>
-        );
-    }
-    else{
-        navigationView = (
-            <View  style={{flex: 1}}>
-                <View style={{flex: 3,backgroundColor: '#ed4f3e',flexDirection: 'column',        justifyContent: 'space-between', }} >
-                    <View style={{flexDirection: 'row'}}>
-                        <View style={{flex:1}}>
-                            <View style={styles.circle}>
-                                <Icon name="person" />
-                            </View>
-                        </View>
-                        <View style={{ marginTop: 10, alignItems:'flex-end' }}>
-                            <View style={{width: 100, height: 50, marginRight: 10}}>
-                                <Button onPress={this.logOut} title="Logout" />
-                                    
-                            </View>
-                        </View>
-                    </View>
-                    <View  style={{marginBottom: 10, marginLeft:20}}>
-                        <Text style={{fontSize: 16, color: '#ffffff'}}>{this.state.user.email}</Text>
-                    </View>
-                </View>
-                    <View style={{flex: 9}}>
-                        <View style={styles.rowMenu}>
-                         <Icon name="whatshot" style={styles.menuIcon} />
-                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Trending Topics</Text>
-                        </View>
-                        <View style={styles.rowMenu}>
-                         <Icon name="create" style={styles.menuIcon} />
-                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Create Topic</Text>
-                        </View>
-                        <View style={[styles.rowMenu, styles.selected]}>
-                            <Icon name="list" style={styles.menuIcon} />
-                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Categories</Text>
-                        </View>
-                        <View style={styles.rowMenu}>
-                         <Icon name="search" style={styles.menuIcon} />
-                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>Search Topic</Text>
-                        </View>
-                        <View style={styles.rowMenu}>
-                         <Icon name="favorite" style={styles.menuIcon} />
-                             <Text style={styles.textMenu} onPress={this.goToTopics.bind(this)}>My Topics</Text>
-                        </View>
-                        <View style={styles.rowMenu}>
-                                <Icon name="people" style={styles.menuIcon} />
-                             <Text style={styles.textMenu} onPress={this.goTo.bind(this, 'createTopic')}>About</Text>
-                        </View>
-                    </View>
-                    
-            </View>
-        );
-    }
     return (
-        <DrawerLayoutAndroid style={styles.landing}
-            drawerWidth={300}
-            ref={(_drawer) => this.drawer = _drawer}
-            drawerPosition={DrawerLayoutAndroid.positions.Left}
-            renderNavigationView={() => navigationView}>
-            <View style={styles.header}>
-                <TouchableHighlight onPress={this.openDrawer} style={styles.barMenuIcon}>
-                    <View style={{flexDirection: 'row'}}>
-                         <Icon name="menu" color="rgba(255,255,255,.9)" />
-                        <Text style={styles.textBar}>Trending Topics</Text>
-                    </View>
-                </TouchableHighlight>
-            </View>
+        <View>
 		    {this.renderLoginButton()}
-          </DrawerLayoutAndroid>
+            </View>
     );
   }
 
@@ -246,11 +162,11 @@ const styles= StyleSheet.create({
         height: 50
     },
     landing:{
-        backgroundColor: 'grey',
         flex: 1,
         padding: 10
     },
     imageLogo:{
+        marginTop: 15,
         flexDirection: 'column',
         alignItems:'center'
     },
@@ -289,18 +205,22 @@ const styles= StyleSheet.create({
     marginTop: 10,
     justifyContent: 'center',
     alignItems: 'center'
-
-},
-    header:{
-        backgroundColor: '#ed4f3e'
-    },
-    barMenuIcon:{
-        padding: 10
-    },
-    menuIcon:{
-        fontSize: 20
-    }
-    
+  },
+  header:{
+    backgroundColor: '#ed4f3e'
+  },
+  barMenuIcon:{
+    padding: 10
+  },
+  menuIcon:{
+    fontSize: 20
+  },
+  logInButton:{
+    backgroundColor: '#ed4f3e',
+    color: '#000000',
+    width: 5,
+    marginTop: 50
+  }
 });
 
 //'#4874a8' azul lila

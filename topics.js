@@ -25,6 +25,7 @@ class Topics extends Component {
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.topics = [];
         this.topics2 = [];
+        _this = this;
         this.dataSource = ds.cloneWithRows(this.topics);
         this.handleInputOnChange = this.handleInputOnChange.bind(this);
         this.getAllTopics((topicTitle, topicId) => {
@@ -57,7 +58,7 @@ class Topics extends Component {
 
 
  goToPosts(_topicId) {
-    this.props.navigator.push({
+    _this.props.navigator.push({
       id: 'posts',
        props: {
           topicId: _topicId
